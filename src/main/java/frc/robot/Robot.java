@@ -35,11 +35,17 @@ public class Robot extends TimedRobot {
    * used for any initialization code.
    */
   @Override
-  public void robotInit() {
+  public void robotInit() 
+  {
     m_oi = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+
+    SmartDashboard.putNumber("kp", 0.0);
+    SmartDashboard.putNumber("ki", 0.0);
+    SmartDashboard.putNumber("kd", 0.0);
+    SmartDashboard.putNumber("ka", 0.0);
 
     RobotMap.init();
   }
