@@ -30,9 +30,9 @@ public class Follow extends Command {
 
 	Notifier profileProcessor; 
 	double dt; 
-  public Follow(String leftFile, Stirng rightFile) {
+  public Follow(String leftFile, String rightFile) {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.drivetrain);
+    requires(RobotMap.driveTrainSubsystem);
     leftCSV = new File("/home/lvuser/deploy/" + leftFile + ".csv");
     rightCSV = new File("/home/lvuser/deploy/" + rightFile + ".csv");
     leftTraj = Pathfinder.readFromCSV(leftCSV);
@@ -50,8 +50,8 @@ public class Follow extends Command {
     leftFollower.reset();
     rightFollower.reset();
     //Wheel diameter in feet
-    leftFollower.configureEncoder((int) Robot.drivetrain.getLeftEnocderTicks(), RobotMap.DRIVETRAIN_ENCODER_TICKS_PER_REVOLUTION, RobotMap.DRIVETRAIN_WHEEL_DIAMETER / 12);
-    rightFollower.configureEncoder((int) Robot.drivetrain.getRightEnocderTicks(), RobotMap.DRIVETRAIN_ENCODER_TICKS_PER_REVOLUTION, RobotMap.DRIVETRAIN_WHEEL_DIAMETER / 12);
+    leftFollower.configureEncoder((int) RobotMap.driveTrainSubsystem.getLeftEnocderTicks(), RobotMap.DRIVETRAIN_ENCODER_TICKS_PER_REVOLUTION, RobotMap.DRIVETRAIN_WHEEL_DIAMETER / 12);
+    rightFollower.configureEncoder((int) RobotMap.driveTrainSubsystem.getRightEnocderTicks(), RobotMap.DRIVETRAIN_ENCODER_TICKS_PER_REVOLUTION, RobotMap.DRIVETRAIN_WHEEL_DIAMETER / 12);
     leftFollower.configurePIDVA(SmartDashboard.getNumber("kp", 0.0), SmartDashboard.getNumber("ki", 0), SmartDashboard.getNumber("kd", 0.0), RobotMap.kv, SmartDashboard.getNumber("ka", 0));
     rightFollower.configurePIDVA(SmartDashboard.getNumber("kp", 0.0), SmartDashboard.getNumber("ki", 0), SmartDashboard.getNumber("kd", 0.0), RobotMap.kv, SmartDashboard.getNumber("ka", 0));
     profileProcessor.startPeriodic(dt);
@@ -72,7 +72,7 @@ public class Follow extends Command {
   @Override
   protected void end() {
     profileProcessor.stop();
-    Robot.drivetrain.stop();
+    RobotMap.driveTrainSubsystem.stop();
   }
 
   // Called when another command which requires one or more of the same
@@ -85,15 +85,15 @@ public class Follow extends Command {
     int segmentNumber = 0; 
     @Override
     public void run() {
-      double leftOutput = leftFollower.calculate((int) Robot.drivetrain.getLeftEncoderTicks());
-      double rightOutput = rightFollower.calculate((int) Robot.drivetrain.getRightEncoderTicks());
-      double gyroHeading = Robot.drivetrain.getGyroAngle();
+      double leftOutput = leftFollower.calculate((int) RobotMap.driveTrainSubsystem.getLeftEncoderTicks());
+      double rightOutput = rightFollower.calculate((int) RobotMap.driveTrainSubsystem.getRightEncoderTicks());
+      double gyroHeading = RobotMap.driveTrainSubsystem.getGyroAngle();
       double desiredHeading = Pathfinder.r2d(leftFollower.getHeading());
       //Pathfinder is counter-clockwise while gyro is clockwise so gyro heading is added
       double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading + gyroHeading);
       //kg is the turn gain and is the p for the angle loop
       double turn = 0.08 * (-1.0 / 80.0) * angleDifference;
-      Robot.drivetrain.tankDrive(leftOutput + turn, rightOutput - turn);
+      RobotMap.driveTrainSubsystem.tankDrive(leftOutput + turn, rightOutput - turn);
       //System.out.println(segmentNumber + "-Left Power: " + (leftOutput + turn) + " Right Power: " + (rightOutput - turn));
       segmentNumber++; 
     }

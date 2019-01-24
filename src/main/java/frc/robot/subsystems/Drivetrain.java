@@ -8,9 +8,6 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -19,18 +16,10 @@ import edu.wpi.first.wpilibj.drive.*;
 /**
  * An example subsystem. You can replace me with your own Subsystem.
  */
-public class Drivetrain extends Subsystem {
+public class Drivetrain extends Subsystem 
+{
   // Drivetrain Motors
-  private CANSparkMax leftTopMotor,
-                      rightTopMotor,
-                      leftMiddleMotor,
-                      rightMiddleMotor,
-                      leftBottomMotor,
-                      rightBottomMotor;
-  public static AHRS navX;
-  private CANEncoder leftEncoder;
-  private CANEncoder rightEncoder;
-  private DifferentialDrive differentialDrive;
+
   public Drivetrain() {
     leftTopMotor = new CANSparkMax(3, MotorType.kBrushless);
     rightTopMotor = new CANSparkMax(6, MotorType.kBrushless);
